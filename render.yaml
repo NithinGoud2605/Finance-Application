@@ -11,7 +11,7 @@ services:
       cd frontend && npm ci && cd ..
       echo "Building frontend..."
       cd frontend && npm run build && cd ..
-      echo "Build completed successfully"
+      echo "✅ Build completed successfully"
     startCommand: node server.js
     envVars:
       - key: NODE_ENV

@@ -5,6 +5,8 @@ const express = require('express');
 const session = require('express-session');
 const helmet = require('helmet');
 const cors = require('cors');
+const fs = require('fs');
+const path = require('path');
 const validateEnvironment = require('./utils/envValidator');
 const errorHandler = require('./middlewares/errorHandler');
 const { authenticate } = require('./middlewares/authMiddleware');
@@ -285,27 +287,46 @@ app.use('/api/secure', require('./routes/secureRoutes'));
 app.options('/api/*', cors());
 
 // ──────────────────────────────────────────────────────────────
-// ✅ 7.5. STATIC FILE SERVING (PRODUCTION)
+// ✅ 7.5. STATIC FILE SERVING (PRODUCTION + DEVELOPMENT WITH BUILD)
 // ──────────────────────────────────────────────────────────────
-if (process.env.NODE_ENV === 'production') {
-  // Serve static files from the frontend dist directory
-  app.use(express.static('frontend/dist'));
-  
-  // Handle React Router - serve index.html for all non-API routes
-  app.get('*', (req, res, next) => {
-    // Skip API routes
-    if (req.path.startsWith('/api/')) {
-      return next();
-    }
+// Serve static files if frontend/dist exists (production or built frontend)
+const frontendDistPath = path.join(__dirname, 'frontend', 'dist');
+const frontendDistExists = fs.existsSync(frontendDistPath);
+
+if (process.env.NODE_ENV === 'production' || frontendDistExists) {
+  if (frontendDistExists) {
+    // Serve static files from the frontend dist directory
+    app.use(express.static('frontend/dist'));
+    logger.info('Serving static files from frontend/dist');
     
-    // Serve the React app's index.html for all other routes
-    res.sendFile('index.html', { root: 'frontend/dist' }, (err) => {
-      if (err) {
-        logger.error('Error serving index.html:', err);
-        res.status(500).send('Server Error');
+    // Handle React Router - serve index.html for all non-API routes
+    app.get('*', (req, res, next) => {
+      // Skip API routes
+      if (req.path.startsWith('/api/')) {
+        return next();
       }
+      
+      // Skip health check routes
+      if (req.path === '/health' || req.path === '/api/health') {
+        return next();
+      }
+      
+      // Serve the React app's index.html for all other routes
+      res.sendFile('index.html', { root: 'frontend/dist' }, (err) => {
+        if (err) {
+          logger.error('Error serving index.html:', err);
+          res.status(500).send('Server Error');
+        }
+      });
     });
-  });
+  } else {
+    logger.warn('frontend/dist directory not found. Frontend will not be served.');
+    logger.info('For production: Run "cd frontend && npm run build"');
+    logger.info('For development: Run "cd frontend && npm run dev" in a separate terminal');
+  }
+} else {
+  logger.info('Running in development mode without frontend build.');
+  logger.info('Start frontend dev server: cd frontend && npm run dev');
 }
 
 // ──────────────────────────────────────────────────────────────
