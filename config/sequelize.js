@@ -78,7 +78,10 @@ function createSequelizeInstance() {
         socketTimeout: 30000,
         idleTimeout: 60000,
         keepAlive: true,
-        keepAliveInitialDelayMillis: 0
+        keepAliveInitialDelayMillis: 0,
+        // Force IPv4 to avoid IPv6 connection issues on Render
+        // This prevents ENETUNREACH errors when hostname resolves to IPv6
+        family: 4
       },
       pool: {
         max: isProduction ? 3 : 5,
