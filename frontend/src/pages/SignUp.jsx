@@ -288,9 +288,15 @@ export default function SignUp(props) {
       };
 
     try {
-      await register(data);
-      setRegisteredEmail(emailValue);
-      setStep(3); // Go directly to verification step
+      const response = await register(data);
+      // Registration successful - email is already confirmed via admin API
+      // Redirect to sign-in page with success message
+      navigate('/sign-in', {
+        state: {
+          message: response.message || 'Registration successful! Please sign in to continue.',
+          registeredEmail: emailValue
+        }
+      });
     } catch (err) {
       console.error('Registration error:', err);
       
