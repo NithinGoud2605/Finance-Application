@@ -193,88 +193,132 @@ const InteractiveDashboard = () => {
         </motion.div>
       </motion.div>
 
-      {/* Metrics Grid */}
-      <div className="grid grid-cols-2 gap-3 mb-6 relative z-10">
+      {/* Large Featured Metric Card */}
+      <motion.div 
+        className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-xl p-5 mb-4 relative overflow-hidden"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+      >
+        {/* Animated background pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0" style={{
+            backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)',
+            backgroundSize: '20px 20px'
+          }} />
+        </div>
+        
+        <div className="relative z-10">
+          <div className="flex items-center justify-between mb-3">
+            <div>
+              <p className="text-slate-400 text-xs font-medium mb-1">Total Revenue</p>
+              <motion.div 
+                className="text-3xl font-bold text-white"
+                key={displayedMetrics.revenue}
+                initial={{ scale: 1.2 }}
+                animate={{ scale: 1 }}
+                transition={{ duration: 0.3 }}
+              >
+                ${(displayedMetrics.revenue / 1000).toFixed(1)}K
+              </motion.div>
+            </div>
+            <motion.div
+              className="bg-emerald-500/20 p-3 rounded-xl"
+              animate={{ rotate: [0, 5, -5, 0] }}
+              transition={{ duration: 4, repeat: Infinity }}
+            >
+              <BarChart2 className="w-8 h-8 text-emerald-400" />
+            </motion.div>
+          </div>
+          
+          {/* Mini line chart */}
+          <div className="h-16 mt-4">
+            <svg viewBox="0 0 200 60" className="w-full h-full">
+              <motion.polyline
+                points="0,50 30,45 60,40 90,35 120,30 150,25 180,20 200,15"
+                fill="none"
+                stroke="#10b981"
+                strokeWidth="3"
+                initial={{ pathLength: 0 }}
+                animate={{ pathLength: 1 }}
+                transition={{ delay: 0.5, duration: 1.5 }}
+              />
+              <motion.circle
+                cx="200"
+                cy="15"
+                r="4"
+                fill="#10b981"
+                initial={{ scale: 0 }}
+                animate={{ scale: [0, 1.5, 1] }}
+                transition={{ delay: 2, duration: 0.5 }}
+              />
+            </svg>
+          </div>
+          
+          <div className="flex items-center gap-4 mt-3 text-xs">
+            <div className="flex items-center gap-1 text-emerald-400">
+              <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M3.293 9.707a1 1 0 010-1.414l6-6a1 1 0 011.414 0l6 6a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L4.707 9.707a1 1 0 01-1.414 0z" clipRule="evenodd" />
+              </svg>
+              <span>+24.5% vs last month</span>
+            </div>
+            <div className="text-slate-400">•</div>
+            <div className="text-slate-400">All time high</div>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Compact Metrics Grid - Different Style */}
+      <div className="grid grid-cols-3 gap-2 mb-4 relative z-10">
         {[
           { 
-            label: 'Active Clients', 
+            label: 'Clients', 
             value: displayedMetrics.clients, 
-            change: `+${Math.floor(displayedMetrics.clients * 0.1)} this month`,
-            color: 'blue',
             icon: Users,
-            bg: 'bg-blue-50',
-            border: 'border-blue-100',
-            text: 'text-blue-600',
-            textBold: 'text-blue-700',
-            iconColor: 'text-blue-400'
+            color: 'blue',
+            hexColor: '#3b82f6',
+            bgGradient: 'from-blue-500 to-blue-600'
           },
           { 
             label: 'Invoices', 
             value: displayedMetrics.invoices, 
-            change: `$${(displayedMetrics.revenue / 1000).toFixed(1)}K revenue`,
-            color: 'emerald',
             icon: FileText,
-            bg: 'bg-emerald-50',
-            border: 'border-emerald-100',
-            text: 'text-emerald-600',
-            textBold: 'text-emerald-700',
-            iconColor: 'text-emerald-400'
-          },
-          { 
-            label: 'Expenses', 
-            value: `$${(displayedMetrics.expenses / 1000).toFixed(1)}K`, 
-            change: '3 pending approval',
-            color: 'amber',
-            icon: BarChart2,
-            bg: 'bg-amber-50',
-            border: 'border-amber-100',
-            text: 'text-amber-600',
-            textBold: 'text-amber-700',
-            iconColor: 'text-amber-400'
+            color: 'emerald',
+            hexColor: '#10b981',
+            bgGradient: 'from-emerald-500 to-emerald-600'
           },
           { 
             label: 'Contracts', 
             value: displayedMetrics.contracts, 
-            change: `${Math.floor(displayedMetrics.contracts * 0.8)} signed`,
-            color: 'violet',
             icon: ClipboardList,
-            bg: 'bg-violet-50',
-            border: 'border-violet-100',
-            text: 'text-violet-600',
-            textBold: 'text-violet-700',
-            iconColor: 'text-violet-400'
+            color: 'violet',
+            hexColor: '#8b5cf6',
+            bgGradient: 'from-violet-500 to-violet-600'
           }
         ].map((metric, index) => {
           const IconComponent = metric.icon;
           return (
             <motion.div
               key={index}
-              className={`${metric.bg} rounded-xl p-4 border ${metric.border} relative overflow-hidden`}
-              initial={{ opacity: 0, y: 20, scale: 0.9 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ delay: 0.3 + index * 0.1, duration: 0.5 }}
+              className="bg-white rounded-lg p-3 border border-slate-200 shadow-sm relative overflow-hidden group"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.4 + index * 0.1, duration: 0.4 }}
               whileHover={{ scale: 1.05, y: -2 }}
             >
-              {/* Animated background gradient */}
+              {/* Colored accent bar */}
               <motion.div
-                className="absolute inset-0 opacity-0"
-                style={{
-                  background: `linear-gradient(to bottom right, ${
-                    metric.color === 'blue' ? 'rgba(219, 234, 254, 0.5)' :
-                    metric.color === 'emerald' ? 'rgba(209, 250, 229, 0.5)' :
-                    metric.color === 'amber' ? 'rgba(254, 243, 199, 0.5)' :
-                    'rgba(237, 233, 254, 0.5)'
-                  }, transparent)`
-                }}
-                whileHover={{ opacity: 1 }}
-                transition={{ duration: 0.3 }}
+                className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${metric.bgGradient}`}
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{ delay: 0.5 + index * 0.1, duration: 0.5 }}
               />
               
-              <div className="flex items-center justify-between relative z-10">
+              <div className="flex items-center justify-between mt-1">
                 <div>
-                  <p className={`text-xs ${metric.text} font-medium mb-1`}>{metric.label}</p>
+                  <p className="text-xs text-slate-500 mb-0.5">{metric.label}</p>
                   <motion.p 
-                    className={`text-xl font-bold ${metric.textBold}`}
+                    className="text-lg font-bold text-slate-900"
                     key={metric.value}
                     initial={{ scale: 1.2 }}
                     animate={{ scale: 1 }}
@@ -282,20 +326,20 @@ const InteractiveDashboard = () => {
                   >
                     {metric.value}
                   </motion.p>
-                  <p className={`text-xs ${metric.text}`}>{metric.change}</p>
                 </div>
                 <motion.div
+                  className={`p-2 bg-gradient-to-br ${metric.bgGradient} rounded-lg`}
                   animate={{ 
-                    rotate: [0, 10, -10, 0],
+                    rotate: [0, 5, -5, 0],
                     scale: [1, 1.1, 1]
                   }}
                   transition={{ 
-                    duration: 3 + index * 0.5, 
+                    duration: 3, 
                     repeat: Infinity,
                     delay: index * 0.3
                   }}
                 >
-                  <IconComponent className={`w-6 h-6 ${metric.iconColor}`} />
+                  <IconComponent className="w-4 h-4 text-white" />
                 </motion.div>
               </div>
             </motion.div>
@@ -303,167 +347,228 @@ const InteractiveDashboard = () => {
         })}
       </div>
 
-      {/* Revenue Chart */}
+      {/* Line Chart - Different from Hero */}
       <motion.div 
-        className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-4 border border-slate-200 mb-6 relative z-10"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.7 }}
+        className="bg-white rounded-xl p-4 border border-slate-200 mb-4 relative z-10"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.6 }}
       >
-        <div className="flex items-center justify-between mb-3">
-          <div className="text-sm font-semibold text-slate-700">Revenue Overview</div>
-          <motion.div 
-            className="text-xs text-slate-500 bg-white px-2 py-1 rounded"
-            animate={{ scale: [1, 1.05, 1] }}
-            transition={{ duration: 2, repeat: Infinity }}
-          >
-            Last 7 days
-          </motion.div>
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <div className="text-sm font-semibold text-slate-700">Growth Trend</div>
+            <div className="text-xs text-slate-500">Last 30 days</div>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 text-xs">
+              <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
+              <span className="text-slate-600">Revenue</span>
+            </div>
+            <div className="flex items-center gap-1.5 text-xs">
+              <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+              <span className="text-slate-600">Invoices</span>
+            </div>
+          </div>
         </div>
-        <div className="flex items-end justify-between h-24 space-x-2">
-          {chartData.map((height, index) => (
-            <motion.div
-              key={index}
-              className="flex-1 rounded-t-md relative"
-              style={{
-                background: index === 5 
-                  ? 'linear-gradient(to top, #10b981, #34d399)' 
-                  : 'linear-gradient(to top, #cbd5e1, #e2e8f0)'
-              }}
-              initial={{ height: 0 }}
-              animate={{ height: `${height}%` }}
-              transition={{ delay: 0.8 + index * 0.1, duration: 0.6, ease: "easeOut" }}
-              whileHover={{ scale: 1.1, transition: { duration: 0.2 } }}
-            >
-              <motion.div
-                className="absolute -top-6 left-1/2 transform -translate-x-1/2 text-xs font-medium text-slate-600 opacity-0"
-                whileHover={{ opacity: 1, y: -2 }}
-              >
-                ${(height * 100).toLocaleString()}
-              </motion.div>
-            </motion.div>
-          ))}
+        
+        <div className="h-32 relative">
+          <svg viewBox="0 0 300 120" className="w-full h-full">
+            {/* Grid lines */}
+            {[0, 1, 2, 3, 4].map(i => (
+              <line
+                key={i}
+                x1="0"
+                y1={i * 30}
+                x2="300"
+                y2={i * 30}
+                stroke="#e2e8f0"
+                strokeWidth="1"
+                strokeDasharray="2,2"
+              />
+            ))}
+            
+            {/* Revenue line */}
+            <motion.polyline
+              points="0,100 50,85 100,70 150,55 200,45 250,35 300,25"
+              fill="none"
+              stroke="#10b981"
+              strokeWidth="3"
+              strokeLinecap="round"
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ delay: 0.8, duration: 1.5 }}
+            />
+            
+            {/* Invoices line */}
+            <motion.polyline
+              points="0,110 50,95 100,80 150,65 200,55 250,45 300,35"
+              fill="none"
+              stroke="#3b82f6"
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeDasharray="5,5"
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ delay: 1, duration: 1.5 }}
+            />
+            
+            {/* Animated dots */}
+            {[
+              { x: 0, y: 100, color: '#10b981' },
+              { x: 100, y: 70, color: '#10b981' },
+              { x: 200, y: 45, color: '#10b981' },
+              { x: 300, y: 25, color: '#10b981' }
+            ].map((dot, idx) => (
+              <motion.circle
+                key={idx}
+                cx={dot.x}
+                cy={dot.y}
+                r="4"
+                fill={dot.color}
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: [0, 1.5, 1], opacity: 1 }}
+                transition={{ delay: 1.5 + idx * 0.2, duration: 0.5 }}
+              />
+            ))}
+          </svg>
         </div>
+        
         <div className="flex justify-between mt-2 text-xs text-slate-400">
-          {chartLabels.map((label, index) => (
-            <motion.span
-              key={index}
-              className={index === 5 ? 'text-emerald-600 font-medium' : ''}
-              animate={index === 5 ? { scale: [1, 1.1, 1] } : {}}
-              transition={{ duration: 2, repeat: Infinity }}
-            >
-              {label}
-            </motion.span>
-          ))}
+          <span>Week 1</span>
+          <span>Week 2</span>
+          <span>Week 3</span>
+          <span>Week 4</span>
         </div>
       </motion.div>
 
-      {/* Active Feature */}
+      {/* Stats Cards Row */}
+      <div className="grid grid-cols-2 gap-3 mb-4 relative z-10">
+        <motion.div 
+          className="bg-gradient-to-br from-amber-50 to-amber-100 rounded-lg p-3 border border-amber-200"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.7 }}
+        >
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-xs text-amber-700 font-medium mb-1">Expenses</p>
+              <p className="text-lg font-bold text-amber-900">${(displayedMetrics.expenses / 1000).toFixed(1)}K</p>
+              <p className="text-xs text-amber-600 mt-1">3 pending</p>
+            </div>
+            <BarChart2 className="w-8 h-8 text-amber-500" />
+          </div>
+        </motion.div>
+        
+        <motion.div 
+          className="bg-gradient-to-br from-violet-50 to-violet-100 rounded-lg p-3 border border-violet-200"
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.8 }}
+        >
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-xs text-violet-700 font-medium mb-1">Contracts</p>
+              <p className="text-lg font-bold text-violet-900">{displayedMetrics.contracts}</p>
+              <p className="text-xs text-violet-600 mt-1">{Math.floor(displayedMetrics.contracts * 0.8)} signed</p>
+            </div>
+            <ClipboardList className="w-8 h-8 text-violet-500" />
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Quick Actions - Single Row Style */}
       <motion.div 
-        className="bg-slate-50 rounded-xl p-4 border border-slate-200 relative z-10"
+        className="flex gap-2 mb-4 relative z-10"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.9 }}
       >
-        <div className="flex items-center gap-2 mb-3">
-          <motion.div
-            animate={{ rotate: [0, 360] }}
-            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-          >
-            <Zap className="w-4 h-4 text-amber-500" />
-          </motion.div>
-          <span className="text-sm font-medium text-slate-700">Featured</span>
-        </div>
-        
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeFeature}
-            initial={{ opacity: 0, x: 20, scale: 0.95 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
-            exit={{ opacity: 0, x: -20, scale: 0.95 }}
-            transition={{ duration: 0.4 }}
-            className="flex items-center gap-3"
-          >
-            <motion.div 
-              className={`p-2 ${features[activeFeature].iconColor} rounded-lg`}
-              animate={{ rotate: [0, 5, -5, 0] }}
+        <motion.button
+          className="flex-1 bg-slate-900 hover:bg-slate-800 rounded-lg px-4 py-2.5 text-white font-medium text-xs relative overflow-hidden group"
+          whileHover={{ scale: 1.02, y: -1 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          <div className="flex items-center justify-center gap-2">
+            <motion.span
+              className="text-base"
+              animate={{ rotate: [0, 90, 0] }}
               transition={{ duration: 2, repeat: Infinity }}
             >
-              {React.createElement(features[activeFeature].icon, { className: "w-4 h-4 text-white" })}
-            </motion.div>
-            <div className="flex-1">
-              <h4 className="font-semibold text-slate-900 text-sm">{features[activeFeature].title}</h4>
-              <p className="text-xs text-slate-500">{features[activeFeature].description}</p>
-            </div>
-          </motion.div>
-        </AnimatePresence>
+              +
+            </motion.span>
+            <span>Invoice</span>
+          </div>
+        </motion.button>
+        
+        <motion.button
+          className="flex-1 bg-white border-2 border-slate-200 hover:border-slate-300 rounded-lg px-4 py-2.5 text-slate-700 font-medium text-xs"
+          whileHover={{ scale: 1.02, y: -1 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          <div className="flex items-center justify-center gap-2">
+            <Users className="w-3.5 h-3.5" />
+            <span>Client</span>
+          </div>
+        </motion.button>
+        
+        <motion.button
+          className="flex-1 bg-white border-2 border-slate-200 hover:border-slate-300 rounded-lg px-4 py-2.5 text-slate-700 font-medium text-xs"
+          whileHover={{ scale: 1.02, y: -1 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          <div className="flex items-center justify-center gap-2">
+            <ClipboardList className="w-3.5 h-3.5" />
+            <span>Contract</span>
+          </div>
+        </motion.button>
       </motion.div>
 
-      {/* Progress dots */}
+      {/* Feature Carousel - Compact Style */}
       <motion.div 
-        className="flex justify-center mt-4 gap-1 relative z-10"
+        className="bg-gradient-to-r from-slate-50 to-white rounded-lg p-3 border border-slate-200 relative z-10"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1 }}
       >
-        {features.map((_, index) => (
-          <motion.div
-            key={index}
-            className={`h-1.5 rounded-full ${index === activeFeature ? 'bg-slate-900' : 'bg-slate-300'}`}
-            animate={{ 
-              width: index === activeFeature ? 24 : 6,
-              scale: index === activeFeature ? 1.1 : 1
-            }}
-            transition={{ duration: 0.3 }}
-            whileHover={{ scale: 1.2 }}
-          />
-        ))}
-      </motion.div>
-
-      {/* Floating action buttons */}
-      <motion.div 
-        className="grid grid-cols-2 gap-3 mt-4 relative z-10"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.1 }}
-      >
-        <motion.button
-          className="bg-emerald-500 rounded-xl p-3 text-white font-semibold text-sm flex items-center justify-center gap-2"
-          whileHover={{ scale: 1.05, y: -2 }}
-          whileTap={{ scale: 0.95 }}
-          animate={{ 
-            boxShadow: [
-              '0 4px 6px rgba(16, 185, 129, 0.3)',
-              '0 8px 12px rgba(16, 185, 129, 0.4)',
-              '0 4px 6px rgba(16, 185, 129, 0.3)'
-            ]
-          }}
-          transition={{ duration: 2, repeat: Infinity }}
-        >
-          <motion.span
-            animate={{ rotate: [0, 90, 0] }}
-            transition={{ duration: 0.5 }}
-          >
-            +
-          </motion.span>
-          New Invoice
-        </motion.button>
-        <motion.button
-          className="bg-blue-500 rounded-xl p-3 text-white font-semibold text-sm flex items-center justify-center gap-2"
-          whileHover={{ scale: 1.05, y: -2 }}
-          whileTap={{ scale: 0.95 }}
-          animate={{ 
-            boxShadow: [
-              '0 4px 6px rgba(59, 130, 246, 0.3)',
-              '0 8px 12px rgba(59, 130, 246, 0.4)',
-              '0 4px 6px rgba(59, 130, 246, 0.3)'
-            ]
-          }}
-          transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
-        >
-          <Users className="w-4 h-4" />
-          Add Client
-        </motion.button>
+        <div className="flex items-center justify-between">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeFeature}
+              initial={{ opacity: 0, x: 10 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -10 }}
+              transition={{ duration: 0.3 }}
+              className="flex items-center gap-2 flex-1"
+            >
+              <motion.div 
+                className={`p-1.5 ${features[activeFeature].iconColor} rounded-md`}
+                animate={{ rotate: [0, 5, -5, 0] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              >
+                {React.createElement(features[activeFeature].icon, { className: "w-3 h-3 text-white" })}
+              </motion.div>
+              <div className="flex-1 min-w-0">
+                <h4 className="font-semibold text-slate-900 text-xs truncate">{features[activeFeature].title}</h4>
+                <p className="text-xs text-slate-500 truncate">{features[activeFeature].description}</p>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+          
+          {/* Compact progress indicator */}
+          <div className="flex gap-1 ml-2">
+            {features.map((_, index) => (
+              <motion.div
+                key={index}
+                className={`h-1 rounded-full ${index === activeFeature ? 'w-3 bg-slate-900' : 'w-1 bg-slate-300'}`}
+                animate={{ 
+                  width: index === activeFeature ? 12 : 4,
+                  opacity: index === activeFeature ? 1 : 0.5
+                }}
+                transition={{ duration: 0.3 }}
+              />
+            ))}
+          </div>
+        </div>
       </motion.div>
     </motion.div>
   );

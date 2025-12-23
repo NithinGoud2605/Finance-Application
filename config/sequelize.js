@@ -1,21 +1,13 @@
-const { Sequelize } = require('sequelize');
+// IMPORTANT: Set DNS preference FIRST, before any other requires
+// This must be at the very top to ensure it's applied before any DNS lookups
 const dns = require('dns');
-
-// Force Node.js to prefer IPv4 addresses (fixes IPv6 connection issues on Render)
-// This must be set before any network connections are made
-if (dns.setDefaultResultOrder) {
-  // Node.js 17.0.0+
+if (typeof dns.setDefaultResultOrder === 'function') {
+  // Node.js 17.0.0+ - Force IPv4 first to avoid IPv6 connection issues on Render
   dns.setDefaultResultOrder('ipv4first');
-} else {
-  // For older Node.js versions, use the deprecated but supported method
-  dns.setDefaultResultOrder = dns.setDefaultResultOrder || function(order) {
-    if (order === 'ipv4first') {
-      // Set environment variable for older Node.js
-      process.env.NODE_OPTIONS = (process.env.NODE_OPTIONS || '') + ' --dns-result-order=ipv4first';
-    }
-  };
-  dns.setDefaultResultOrder('ipv4first');
+  console.log('✅ DNS set to prefer IPv4 (ipv4first)');
 }
+
+const { Sequelize } = require('sequelize');
 
 // Parse Supabase database URL if provided
 function parseDatabaseUrl(url) {
@@ -96,8 +88,8 @@ function createSequelizeInstance() {
         idleTimeout: 60000,
         keepAlive: true,
         keepAliveInitialDelayMillis: 0,
-        // Force IPv4 to avoid IPv6 connection issues on Render
-        // This prevents ENETUNREACH errors when hostname resolves to IPv6
+        // Force IPv4 connection (pg library option)
+        // Combined with dns.setDefaultResultOrder('ipv4first') above for maximum compatibility
         family: 4
       },
       pool: {

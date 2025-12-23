@@ -294,8 +294,8 @@ export default function Hero() {
               </motion.div>
 
               {/* Dashboard Content */}
-              <div className="p-5 space-y-4 bg-slate-50">
-                {/* Stats Row */}
+              <div className="p-5 space-y-4 bg-gradient-to-br from-slate-50 to-slate-100">
+                {/* Stats Row with Sparklines */}
                 <div className="grid grid-cols-3 gap-3">
                   {[
                     { 
@@ -304,7 +304,9 @@ export default function Hero() {
                       format: (v) => `$${(v / 1000).toFixed(1)}K`,
                       change: '+12.5%',
                       color: 'emerald',
-                      icon: '↑'
+                      icon: '↑',
+                      sparkline: [20, 35, 25, 45, 30, 55, 40],
+                      progress: 78
                     },
                     { 
                       label: 'Invoices', 
@@ -312,7 +314,9 @@ export default function Hero() {
                       format: (v) => v.toString(),
                       change: '+8.2%',
                       color: 'blue',
-                      icon: '↑'
+                      icon: '↑',
+                      sparkline: [30, 45, 35, 50, 40, 60, 55],
+                      progress: 65
                     },
                     { 
                       label: 'Clients', 
@@ -320,16 +324,18 @@ export default function Hero() {
                       format: (v) => v.toString(),
                       change: '+5.1%',
                       color: 'amber',
-                      icon: '↑'
+                      icon: '↑',
+                      sparkline: [25, 30, 28, 35, 32, 40, 38],
+                      progress: 85
                     }
                   ].map((stat, index) => (
                     <motion.div 
                       key={index}
-                      className="bg-white rounded-xl p-4 border border-slate-200 shadow-sm relative overflow-hidden"
+                      className="bg-white rounded-xl p-4 border border-slate-200 shadow-sm relative overflow-hidden group"
                       initial={{ opacity: 0, y: 20, scale: 0.9 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       transition={{ delay: 0.6 + index * 0.1, duration: 0.5 }}
-                      whileHover={{ scale: 1.05, y: -2 }}
+                      whileHover={{ scale: 1.05, y: -2, shadow: 'lg' }}
                     >
                       {/* Hover gradient effect */}
                       <motion.div
@@ -341,10 +347,39 @@ export default function Hero() {
                         whileHover={{ opacity: 1 }}
                         transition={{ duration: 0.3 }}
                       />
+                      
+                      {/* Mini Sparkline */}
+                      <div className="absolute bottom-2 right-2 w-16 h-8 opacity-20 group-hover:opacity-40 transition-opacity">
+                        <svg viewBox="0 0 60 20" className="w-full h-full">
+                          <motion.polyline
+                            points={stat.sparkline.map((val, i) => `${(i * 10)},${20 - val}`).join(' ')}
+                            fill="none"
+                            stroke={stat.color === 'emerald' ? '#10b981' : stat.color === 'blue' ? '#3b82f6' : '#f59e0b'}
+                            strokeWidth="2"
+                            initial={{ pathLength: 0 }}
+                            animate={{ pathLength: 1 }}
+                            transition={{ delay: 0.8 + index * 0.1, duration: 1 }}
+                          />
+                        </svg>
+                      </div>
+
                       <div className="relative z-10">
-                        <div className="text-xs text-slate-500 font-medium mb-1">{stat.label}</div>
+                        <div className="flex items-center justify-between mb-1">
+                          <div className="text-xs text-slate-500 font-medium">{stat.label}</div>
+                          <motion.div 
+                            className={`text-xs px-1.5 py-0.5 rounded ${
+                              stat.color === 'emerald' ? 'bg-emerald-100 text-emerald-700' :
+                              stat.color === 'blue' ? 'bg-blue-100 text-blue-700' :
+                              'bg-amber-100 text-amber-700'
+                            }`}
+                            animate={{ scale: [1, 1.1, 1] }}
+                            transition={{ duration: 2, repeat: Infinity }}
+                          >
+                            {stat.change}
+                          </motion.div>
+                        </div>
                         <motion.div 
-                          className="text-xl font-bold text-slate-900"
+                          className="text-xl font-bold text-slate-900 mb-2"
                           key={stat.value}
                           initial={{ scale: 1.2 }}
                           animate={{ scale: 1 }}
@@ -352,168 +387,323 @@ export default function Hero() {
                         >
                           {stat.format(stat.value)}
                         </motion.div>
-                        <motion.div 
-                          className={`flex items-center text-xs ${
-                            stat.color === 'emerald' ? 'text-emerald-600' :
-                            stat.color === 'blue' ? 'text-blue-600' :
-                            'text-amber-600'
-                          } mt-1`}
-                          animate={{ opacity: [1, 0.7, 1] }}
-                          transition={{ duration: 2, repeat: Infinity }}
-                        >
-                          <motion.svg 
-                            className="w-3 h-3 mr-1" 
-                            fill="currentColor" 
-                            viewBox="0 0 20 20"
-                            animate={{ y: [0, -2, 0] }}
-                            transition={{ duration: 1.5, repeat: Infinity }}
-                          >
-                            <path fillRule="evenodd" d="M3.293 9.707a1 1 0 010-1.414l6-6a1 1 0 011.414 0l6 6a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L4.707 9.707a1 1 0 01-1.414 0z" clipRule="evenodd" />
-                          </motion.svg>
-                          {stat.change}
-                        </motion.div>
+                        
+                        {/* Progress Bar */}
+                        <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                          <motion.div
+                            className={`h-full rounded-full ${
+                              stat.color === 'emerald' ? 'bg-emerald-500' :
+                              stat.color === 'blue' ? 'bg-blue-500' :
+                              'bg-amber-500'
+                            }`}
+                            initial={{ width: 0 }}
+                            animate={{ width: `${stat.progress}%` }}
+                            transition={{ delay: 1 + index * 0.1, duration: 0.8, ease: "easeOut" }}
+                          />
+                        </div>
                       </div>
                     </motion.div>
                   ))}
                 </div>
 
-                {/* Chart Area */}
+                {/* Recent Activity & Quick Stats */}
+                <div className="grid grid-cols-2 gap-3">
+                  <motion.div 
+                    className="bg-white rounded-xl p-3 border border-slate-200 shadow-sm"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.9 }}
+                  >
+                    <div className="text-xs font-semibold text-slate-700 mb-2">Recent Activity</div>
+                    <div className="space-y-2">
+                      {[
+                        { text: 'Invoice #1245 paid', time: '2m ago', color: 'emerald' },
+                        { text: 'New client added', time: '15m ago', color: 'blue' },
+                        { text: 'Contract signed', time: '1h ago', color: 'violet' }
+                      ].map((activity, idx) => (
+                        <motion.div
+                          key={idx}
+                          className="flex items-center gap-2 text-xs"
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: 1 + idx * 0.1 }}
+                        >
+                          <motion.div
+                            className="w-2 h-2 rounded-full"
+                            style={{
+                              backgroundColor: activity.color === 'emerald' ? '#10b981' :
+                                              activity.color === 'blue' ? '#3b82f6' : '#8b5cf6'
+                            }}
+                            animate={{ scale: [1, 1.3, 1], opacity: [1, 0.7, 1] }}
+                            transition={{ duration: 2, repeat: Infinity, delay: idx * 0.3 }}
+                          />
+                          <span className="text-slate-600 flex-1">{activity.text}</span>
+                          <span className="text-slate-400">{activity.time}</span>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </motion.div>
+
+                  <motion.div 
+                    className="bg-white rounded-xl p-3 border border-slate-200 shadow-sm"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.9 }}
+                  >
+                    <div className="text-xs font-semibold text-slate-700 mb-2">Quick Stats</div>
+                    <div className="space-y-2">
+                      {[
+                        { label: 'Pending', value: '3', color: 'amber' },
+                        { label: 'Completed', value: '142', color: 'emerald' },
+                        { label: 'This Month', value: '28', color: 'blue' }
+                      ].map((stat, idx) => (
+                        <motion.div
+                          key={idx}
+                          className="flex items-center justify-between"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ delay: 1 + idx * 0.1 }}
+                        >
+                          <span className="text-xs text-slate-600">{stat.label}</span>
+                          <motion.span
+                            className={`text-xs font-bold ${
+                              stat.color === 'emerald' ? 'text-emerald-600' :
+                              stat.color === 'blue' ? 'text-blue-600' :
+                              'text-amber-600'
+                            }`}
+                            animate={{ scale: [1, 1.1, 1] }}
+                            transition={{ duration: 2, repeat: Infinity, delay: idx * 0.2 }}
+                          >
+                            {stat.value}
+                          </motion.span>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </motion.div>
+                </div>
+
+                {/* Chart Area with Enhanced Design */}
                 <motion.div 
-                  className="bg-white rounded-xl p-4 border border-slate-200 shadow-sm"
+                  className="bg-white rounded-xl p-4 border border-slate-200 shadow-sm relative overflow-hidden"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.9 }}
+                  transition={{ delay: 1.1 }}
                 >
-                  <div className="flex items-center justify-between mb-3">
-                    <motion.div 
-                      className="text-sm font-semibold text-slate-700"
-                      animate={{ opacity: [1, 0.8, 1] }}
-                      transition={{ duration: 3, repeat: Infinity }}
-                    >
-                      Revenue Overview
-                    </motion.div>
-                    <motion.div 
-                      className="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded"
-                      animate={{ scale: [1, 1.05, 1] }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                    >
-                      Last 7 days
-                    </motion.div>
+                  {/* Chart background pattern */}
+                  <div className="absolute inset-0 opacity-5">
+                    <div className="absolute inset-0" style={{
+                      backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, #000 2px, #000 4px)',
+                      backgroundSize: '100% 20px'
+                    }} />
                   </div>
-                  <div className="flex items-end justify-between h-24 space-x-2">
-                    {[35, 55, 40, 70, 45, 85, 65].map((height, index) => (
-                      <motion.div
-                        key={index}
-                        className="flex-1 rounded-t-md relative group"
-                        style={{
-                          background: index === 5 
-                            ? 'linear-gradient(to top, #10b981, #34d399)' 
-                            : 'linear-gradient(to top, #cbd5e1, #e2e8f0)'
-                        }}
-                        initial={{ height: 0 }}
-                        animate={{ height: `${height}%` }}
-                        transition={{ delay: 1.2 + index * 0.1, duration: 0.6, ease: "easeOut" }}
-                        whileHover={{ scale: 1.1, transition: { duration: 0.2 } }}
-                      >
-                        <motion.div
-                          className="absolute -top-6 left-1/2 transform -translate-x-1/2 text-xs font-medium text-slate-700 bg-white px-2 py-1 rounded shadow-md opacity-0 whitespace-nowrap"
-                          whileHover={{ opacity: 1, y: -2 }}
+                  
+                  <div className="relative z-10">
+                    <div className="flex items-center justify-between mb-3">
+                      <div>
+                        <motion.div 
+                          className="text-sm font-semibold text-slate-700"
+                          animate={{ opacity: [1, 0.8, 1] }}
+                          transition={{ duration: 3, repeat: Infinity }}
                         >
-                          ${(height * 100).toLocaleString()}
+                          Revenue Overview
                         </motion.div>
-                      </motion.div>
-                    ))}
-                  </div>
-                  <div className="flex justify-between mt-2 text-xs text-slate-400">
-                    {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((label, index) => (
-                      <motion.span
-                        key={index}
-                        className={index === 5 ? 'text-emerald-600 font-medium' : ''}
-                        animate={index === 5 ? { scale: [1, 1.2, 1] } : {}}
+                        <div className="text-xs text-slate-500 mt-0.5">Total: ${(displayedMetrics.revenue / 1000).toFixed(1)}K</div>
+                      </div>
+                      <motion.div 
+                        className="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded flex items-center gap-1"
+                        animate={{ scale: [1, 1.05, 1] }}
                         transition={{ duration: 2, repeat: Infinity }}
                       >
-                        {label}
-                      </motion.span>
-                    ))}
+                        <motion.div
+                          className="w-1.5 h-1.5 bg-emerald-500 rounded-full"
+                          animate={{ opacity: [1, 0.3, 1] }}
+                          transition={{ duration: 1.5, repeat: Infinity }}
+                        />
+                        Last 7 days
+                      </motion.div>
+                    </div>
+                    
+                    <div className="flex items-end justify-between h-28 space-x-1.5 mb-1">
+                      {[35, 55, 40, 70, 45, 85, 65].map((height, index) => (
+                        <motion.div
+                          key={index}
+                          className="flex-1 rounded-t-md relative group cursor-pointer"
+                          style={{
+                            background: index === 5 
+                              ? 'linear-gradient(to top, #059669, #10b981, #34d399)' 
+                              : 'linear-gradient(to top, #94a3b8, #cbd5e1, #e2e8f0)',
+                            boxShadow: index === 5 
+                              ? '0 4px 6px rgba(16, 185, 129, 0.3)' 
+                              : '0 2px 4px rgba(0, 0, 0, 0.1)'
+                          }}
+                          initial={{ height: 0 }}
+                          animate={{ height: `${height}%` }}
+                          transition={{ delay: 1.3 + index * 0.1, duration: 0.6, ease: "easeOut" }}
+                          whileHover={{ scale: 1.15, y: -2, transition: { duration: 0.2 } }}
+                        >
+                          {/* Bar highlight on hover */}
+                          <motion.div
+                            className="absolute inset-0 bg-white/30 rounded-t-md opacity-0"
+                            whileHover={{ opacity: 1 }}
+                          />
+                          <motion.div
+                            className="absolute -top-8 left-1/2 transform -translate-x-1/2 text-xs font-bold text-slate-700 bg-white px-2 py-1 rounded-lg shadow-lg opacity-0 whitespace-nowrap border border-slate-200"
+                            whileHover={{ opacity: 1, y: -4 }}
+                          >
+                            ${(height * 100).toLocaleString()}
+                            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-white"></div>
+                          </motion.div>
+                        </motion.div>
+                      ))}
+                    </div>
+                    
+                    <div className="flex justify-between mt-3 text-xs">
+                      {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((label, index) => (
+                        <motion.span
+                          key={index}
+                          className={index === 5 ? 'text-emerald-600 font-bold' : 'text-slate-400'}
+                          animate={index === 5 ? { scale: [1, 1.2, 1] } : {}}
+                          transition={{ duration: 2, repeat: Infinity }}
+                        >
+                          {label}
+                        </motion.span>
+                      ))}
+                    </div>
                   </div>
                 </motion.div>
 
-                {/* Quick Actions */}
+                {/* Quick Actions with Notifications */}
                 <div className="grid grid-cols-2 gap-3">
                   <motion.div 
-                    className="bg-emerald-500 rounded-xl p-4 text-white cursor-pointer relative overflow-hidden"
+                    className="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl p-4 text-white cursor-pointer relative overflow-hidden group"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ 
                       opacity: 1, 
                       y: 0,
                       boxShadow: [
                         '0 4px 6px rgba(16, 185, 129, 0.3)',
-                        '0 8px 16px rgba(16, 185, 129, 0.4)',
+                        '0 8px 20px rgba(16, 185, 129, 0.5)',
                         '0 4px 6px rgba(16, 185, 129, 0.3)'
                       ]
                     }}
                     transition={{ 
-                      opacity: { delay: 1.1 },
-                      y: { delay: 1.1 },
+                      opacity: { delay: 1.4 },
+                      y: { delay: 1.4 },
                       boxShadow: { duration: 2, repeat: Infinity }
                     }}
-                    whileHover={{ scale: 1.05, y: -2 }}
+                    whileHover={{ scale: 1.05, y: -3 }}
                   >
+                    {/* Shimmer effect */}
                     <motion.div
-                      className="absolute inset-0 bg-white/20"
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
                       animate={{ x: ['-100%', '100%'] }}
                       transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
                     />
-                    <div className="flex items-center space-x-2 relative z-10">
+                    
+                    {/* Notification badge */}
+                    <motion.div
+                      className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center"
+                      animate={{ scale: [1, 1.2, 1] }}
+                      transition={{ duration: 1.5, repeat: Infinity }}
+                    >
+                      3
+                    </motion.div>
+                    
+                    <div className="flex items-center justify-between relative z-10">
+                      <div className="flex items-center space-x-2">
+                        <motion.div
+                          className="bg-white/20 rounded-lg p-2"
+                          animate={{ rotate: [0, 5, -5, 0] }}
+                          transition={{ duration: 3, repeat: Infinity }}
+                        >
+                          <motion.svg 
+                            className="w-5 h-5" 
+                            fill="none" 
+                            stroke="currentColor" 
+                            viewBox="0 0 24 24"
+                            animate={{ rotate: [0, 90, 0] }}
+                            transition={{ duration: 2, repeat: Infinity }}
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                          </motion.svg>
+                        </motion.div>
+                        <div>
+                          <div className="text-sm font-semibold">New Invoice</div>
+                          <div className="text-xs text-emerald-100 opacity-80">Quick create</div>
+                        </div>
+                      </div>
                       <motion.svg 
-                        className="w-5 h-5" 
+                        className="w-4 h-4 opacity-70" 
                         fill="none" 
                         stroke="currentColor" 
                         viewBox="0 0 24 24"
-                        animate={{ rotate: [0, 90, 0] }}
-                        transition={{ duration: 2, repeat: Infinity }}
+                        animate={{ x: [0, 3, 0] }}
+                        transition={{ duration: 1.5, repeat: Infinity }}
                       >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                       </motion.svg>
-                      <span className="text-sm font-semibold">New Invoice</span>
                     </div>
                   </motion.div>
+                  
                   <motion.div 
-                    className="bg-blue-500 rounded-xl p-4 text-white cursor-pointer relative overflow-hidden"
+                    className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-4 text-white cursor-pointer relative overflow-hidden group"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ 
                       opacity: 1, 
                       y: 0,
                       boxShadow: [
                         '0 4px 6px rgba(59, 130, 246, 0.3)',
-                        '0 8px 16px rgba(59, 130, 246, 0.4)',
+                        '0 8px 20px rgba(59, 130, 246, 0.5)',
                         '0 4px 6px rgba(59, 130, 246, 0.3)'
                       ]
                     }}
                     transition={{ 
-                      opacity: { delay: 1.2 },
-                      y: { delay: 1.2 },
+                      opacity: { delay: 1.5 },
+                      y: { delay: 1.5 },
                       boxShadow: { duration: 2, repeat: Infinity, delay: 0.5 }
                     }}
-                    whileHover={{ scale: 1.05, y: -2 }}
+                    whileHover={{ scale: 1.05, y: -3 }}
                   >
+                    {/* Shimmer effect */}
                     <motion.div
-                      className="absolute inset-0 bg-white/20"
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
                       animate={{ x: ['-100%', '100%'] }}
                       transition={{ duration: 2, repeat: Infinity, ease: "linear", delay: 0.5 }}
                     />
-                    <div className="flex items-center space-x-2 relative z-10">
+                    
+                    <div className="flex items-center justify-between relative z-10">
+                      <div className="flex items-center space-x-2">
+                        <motion.div
+                          className="bg-white/20 rounded-lg p-2"
+                          animate={{ rotate: [0, -5, 5, 0] }}
+                          transition={{ duration: 3, repeat: Infinity, delay: 0.5 }}
+                        >
+                          <motion.svg 
+                            className="w-5 h-5" 
+                            fill="none" 
+                            stroke="currentColor" 
+                            viewBox="0 0 24 24"
+                            animate={{ rotate: [0, -10, 10, 0] }}
+                            transition={{ duration: 3, repeat: Infinity }}
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                          </motion.svg>
+                        </motion.div>
+                        <div>
+                          <div className="text-sm font-semibold">Add Client</div>
+                          <div className="text-xs text-blue-100 opacity-80">New contact</div>
+                        </div>
+                      </div>
                       <motion.svg 
-                        className="w-5 h-5" 
+                        className="w-4 h-4 opacity-70" 
                         fill="none" 
                         stroke="currentColor" 
                         viewBox="0 0 24 24"
-                        animate={{ rotate: [0, -10, 10, 0] }}
-                        transition={{ duration: 3, repeat: Infinity }}
+                        animate={{ x: [0, 3, 0] }}
+                        transition={{ duration: 1.5, repeat: Infinity, delay: 0.3 }}
                       >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                       </motion.svg>
-                      <span className="text-sm font-semibold">Add Client</span>
                     </div>
                   </motion.div>
                 </div>
