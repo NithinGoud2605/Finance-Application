@@ -1,0 +1,83 @@
+<svg width="500" height="300" viewBox="0 0 500 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="500" height="300" rx="12" fill="#F8FAFC"/>
+  <rect x="20" y="20" width="460" height="260" rx="8" fill="white" stroke="#E5E7EB"/>
+  
+  <!-- Header -->
+  <rect x="40" y="40" width="150" height="8" rx="4" fill="#9333EA"/>
+  <rect x="40" y="54" width="250" height="4" rx="2" fill="#E5E7EB"/>
+  
+  <!-- Team members in center -->
+  <g id="team-center">
+    <!-- Person 1 -->
+    <circle cx="200" cy="120" r="25" fill="#3B82F6" opacity="0.1"/>
+    <circle cx="200" cy="120" r="18" fill="#3B82F6"/>
+    <text x="200" y="125" text-anchor="middle" font-size="12" fill="white" font-weight="bold">A</text>
+    
+    <!-- Person 2 -->
+    <circle cx="260" cy="120" r="25" fill="#EC4899" opacity="0.1"/>
+    <circle cx="260" cy="120" r="18" fill="#EC4899"/>
+    <text x="260" y="125" text-anchor="middle" font-size="12" fill="white" font-weight="bold">B</text>
+    
+    <!-- Person 3 -->
+    <circle cx="300" cy="120" r="25" fill="#10B981" opacity="0.1"/>
+    <circle cx="300" cy="120" r="18" fill="#10B981"/>
+    <text x="300" y="125" text-anchor="middle" font-size="12" fill="white" font-weight="bold">C</text>
+  </g>
+  
+  <!-- Connection lines -->
+  <path d="M218 120L242 120" stroke="#9333EA" stroke-width="2" opacity="0.6"/>
+  <path d="M278 120L282 120" stroke="#9333EA" stroke-width="2" opacity="0.6"/>
+  
+  <!-- Floating collaboration elements -->
+  <g id="floating-elements">
+    <!-- Document sharing -->
+    <rect x="120" y="80" width="40" height="30" rx="4" fill="#F3E8FF" opacity="0.9"/>
+    <rect x="125" y="85" width="8" height="2" rx="1" fill="#9333EA"/>
+    <rect x="125" y="89" width="12" height="1" rx="0.5" fill="#E5E7EB"/>
+    <rect x="125" y="92" width="10" height="1" rx="0.5" fill="#E5E7EB"/>
+    <text x="140" y="102" text-anchor="middle" font-size="6" fill="#6B7280">Docs</text>
+    
+    <!-- Messages -->
+    <rect x="340" y="90" width="45" height="25" rx="4" fill="#FDF2F8" opacity="0.9"/>
+    <circle cx="348" cy="98" r="2" fill="#EC4899"/>
+    <rect x="353" y="96" width="8" height="1" rx="0.5" fill="#EC4899"/>
+    <rect x="353" y="99" width="6" height="1" rx="0.5" fill="#E5E7EB"/>
+    <text x="362" y="109" text-anchor="middle" font-size="6" fill="#6B7280">Chat</text>
+    
+    <!-- Analytics -->
+    <rect x="150" y="160" width="40" height="30" rx="4" fill="#F0FDFA" opacity="0.9"/>
+    <rect x="155" y="170" width="3" height="8" rx="1" fill="#14B8A6"/>
+    <rect x="160" y="175" width="3" height="6" rx="1" fill="#14B8A6"/>
+    <rect x="165" y="172" width="3" height="9" rx="1" fill="#14B8A6"/>
+    <text x="170" y="185" text-anchor="middle" font-size="6" fill="#6B7280">Stats</text>
+    
+    <!-- Tasks -->
+    <rect x="310" y="170" width="45" height="25" rx="4" fill="#EEF2FF" opacity="0.9"/>
+    <circle cx="318" cy="178" r="1.5" fill="#4F46E5"/>
+    <rect x="323" y="177" width="8" height="1" rx="0.5" fill="#4F46E5"/>
+    <circle cx="318" cy="183" r="1.5" fill="#E5E7EB"/>
+    <rect x="323" y="182" width="6" height="1" rx="0.5" fill="#E5E7EB"/>
+    <text x="332" y="190" text-anchor="middle" font-size="6" fill="#6B7280">Tasks</text>
+  </g>
+  
+  <!-- Permission levels indicator -->
+  <rect x="40" y="200" width="420" height="40" rx="6" fill="#F9FAFB"/>
+  <text x="60" y="215" font-size="10" fill="#374151" font-weight="bold">Role-based Access Control</text>
+  
+  <!-- Role badges -->
+  <rect x="60" y="220" width="40" height="15" rx="7" fill="#DC2626" opacity="0.1"/>
+  <text x="80" y="229" text-anchor="middle" font-size="8" fill="#DC2626" font-weight="bold">Admin</text>
+  
+  <rect x="110" y="220" width="40" height="15" rx="7" fill="#F59E0B" opacity="0.1"/>
+  <text x="130" y="229" text-anchor="middle" font-size="8" fill="#F59E0B" font-weight="bold">Editor</text>
+  
+  <rect x="160" y="220" width="40" height="15" rx="7" fill="#10B981" opacity="0.1"/>
+  <text x="180" y="229" text-anchor="middle" font-size="8" fill="#10B981" font-weight="bold">Viewer</text>
+  
+  <!-- Real-time sync indicator -->
+  <circle cx="420" cy="227" r="8" fill="#10B981"/>
+  <circle cx="420" cy="227" r="5" fill="white"/>
+  <circle cx="420" cy="227" r="2" fill="#10B981"/>
+  <text x="440" y="230" font-size="8" fill="#10B981" font-weight="bold">Live</text>
+</svg> 

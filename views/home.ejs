@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Finorn Authentication</title>
+  </head>
+  <body>
+    <div>
+      <h1>Finorn - Business Management Platform</h1>
+
+      <% if (isAuthenticated) { %>
+        <div>
+          <h2>Welcome, <%= userInfo.username || userInfo.email %></h2>
+          <p>User Details:</p>
+          <pre><%= JSON.stringify(userInfo, null, 4) %></pre>
+        </div>
+        <a href="/logout">Logout</a>
+      <% } else { %>
+        <p>Please log in to continue</p>
+        <a href="/login">Login</a>
+      <% } %>
+    </div>
+  </body>
+</html>

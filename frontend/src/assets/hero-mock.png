@@ -1,0 +1,11 @@
+# This is a placeholder for the hero mockup image
+# Replace with actual hero dashboard image showing laptop and phone mockups 
+
+<svg width="600" height="400" viewBox="0 0 600 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="600" height="400" fill="#F8FAFC"/>
+  <rect x="50" y="50" width="500" height="300" rx="20" fill="#7B61FF" fill-opacity="0.1"/>
+  <rect x="80" y="80" width="200" height="120" rx="8" fill="#7B61FF" fill-opacity="0.2"/>
+  <rect x="320" y="80" width="200" height="120" rx="8" fill="#FF6BB5" fill-opacity="0.2"/>
+  <rect x="80" y="220" width="440" height="80" rx="8" fill="#2DD4BF" fill-opacity="0.2"/>
+  <text x="300" y="350" text-anchor="middle" font-family="Inter, sans-serif" font-size="18" fill="#64748B">Hero Dashboard Mockup</text>
+</svg> 

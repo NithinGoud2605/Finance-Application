@@ -1,0 +1,322 @@
+# =============================================================================
+# Node.js & Dependencies
+# =============================================================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Package manager lock files (recommended to commit these for consistency)
+# Uncomment if you don't want to commit lock files
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# =============================================================================
+# Environment Variables & Secrets ⚠️ CRITICAL: NEVER COMMIT
+# =============================================================================
+.env
+.env.*
+!.env.example
+!.env.template
+!.env*.template
+production.env
+*.env.local
+*.env.development.local
+*.env.test.local
+*.env.production.local
+
+# Keep template files (explicitly allow)
+!.env.template
+!.env.example
+!production.env.template
+!frontend/env.template
+
+# =============================================================================
+# Build Output & Dist
+# =============================================================================
+# Frontend build output
+frontend/dist/
+frontend/build/
+dist/
+build/
+
+# Backend build output
+*.tsbuildinfo
+.next/
+out/
+
+# =============================================================================
+# Logs
+# =============================================================================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+combined.log
+error.log
+
+# =============================================================================
+# Testing & Coverage
+# =============================================================================
+coverage/
+*.lcov
+.nyc_output/
+.coverage/
+htmlcov/
+.pytest_cache/
+.coverage.*
+*.cover
+.hypothesis/
+test-results/
+playwright-report/
+playwright/.cache/
+
+# =============================================================================
+# Cache Directories
+# =============================================================================
+.cache/
+.parcel-cache/
+.npm/
+.eslintcache
+.stylelintcache
+.node_repl_history
+*.tsbuildinfo
+
+# Vite specific
+.vite/
+vite.config.*.timestamp-*
+frontend/.cache/
+frontend/.vite/
+
+# =============================================================================
+# Uploads & User Content
+# =============================================================================
+uploads/
+uploaded/
+files/
+storage/
+public/uploads/
+
+# =============================================================================
+# Database Files
+# =============================================================================
+*.db
+*.sqlite
+*.sqlite3
+*.db-shm
+*.db-wal
+*.sql
+db.sqlite
+database.sqlite
+
+# Database backups
+*.sql.backup
+*.dump
+backup/
+backups/
+
+# =============================================================================
+# SSL Certificates & Keys ⚠️ SECURITY
+# =============================================================================
+*.pem
+*.key
+*.crt
+*.cert
+*.p12
+*.pfx
+*.jks
+secrets/
+*.secret
+
+# =============================================================================
+# IDE & Editor Files
+# =============================================================================
+# VSCode (allow shared settings)
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# IntelliJ IDEA / WebStorm / PyCharm
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+.vim/
+
+# Emacs
+*~
+\#*\#
+.\#*
+
+# =============================================================================
+# OS Generated Files
+# =============================================================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# =============================================================================
+# Temporary Files
+# =============================================================================
+tmp/
+temp/
+*.tmp
+*.temp
+*.bak
+*.backup
+*.old
+*.orig
+
+# =============================================================================
+# Deployment & Infrastructure
+# =============================================================================
+# AWS / CloudFormation
+.aws-sam/
+samconfig.toml
+
+# Serverless
+.serverless/
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# Docker
+docker-compose.override.yml
+
+# Kubernetes
+*.kubeconfig
+
+# Render / Deployment configs with secrets
+render.yaml.local
+*.secrets.yaml
+
+# =============================================================================
+# Application Specific
+# =============================================================================
+# Test output
+test-*.log
+test-output/
+
+# =============================================================================
+# Monitoring & Analytics
+# =============================================================================
+.sentryclirc
+.sentry/
+
+# =============================================================================
+# Documentation Build
+# =============================================================================
+docs/_build/
+site/
+
+# =============================================================================
+# Miscellaneous
+# =============================================================================
+# Optional npm cache directory
+.npm
+
+# Microbundle cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# Stores VSCode versions used for testing VSCode extensions
+.vscode-test
+
+# yarn v2
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+# Turbo
+.turbo
+
+# =============================================================================
+# Security: Sensitive Files ⚠️ NEVER COMMIT
+# =============================================================================
+# Configuration files that might contain secrets
+config/local.*
+config/*.local.*
+secrets.json
+credentials.json
+*.credentials
+.secrets
+
+# SSH keys
+id_rsa
+id_rsa.pub
+id_ed25519
+id_ed25519.pub
+*.ppk
+
+# Session files
+sessions/
+*.session

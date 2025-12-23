@@ -1,0 +1,47 @@
+services:
+  - type: web
+    name: finorn-backend
+    runtime: node
+    plan: starter
+    region: oregon
+    buildCommand: |
+      echo "Installing backend dependencies..."
+      npm ci --omit=dev
+      echo "Installing frontend dependencies..."
+      cd frontend && npm ci && cd ..
+      echo "Building frontend..."
+      cd frontend && npm run build && cd ..
+      echo "Build completed successfully"
+    startCommand: node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      # IMPORTANT: Set these environment variables in Render Dashboard
+      # DO NOT commit secrets to version control
+      # Required Variables (set in Render Dashboard -> Environment):
+      # - SUPABASE_URL
+      # - SUPABASE_ANON_KEY
+      # - SUPABASE_SERVICE_ROLE_KEY
+      # - SUPABASE_DB_URL
+      # - SUPABASE_STORAGE_BUCKET
+      # - SESSION_KEY
+      # - APP_JWT_SECRET
+      # - CLIENT_ORIGIN
+      # - APP_URL
+      # - STRIPE_SECRET_KEY
+      # - STRIPE_WEBHOOK_SECRET
+      # - STRIPE_INDIVIDUAL_PRICE_ID
+      # - STRIPE_BUSINESS_PRICE_ID
+      # - RESEND_API_KEY
+      # - VITE_API_URL (for frontend build)
+      # - VITE_SUPABASE_URL (for frontend build)
+      # - VITE_SUPABASE_ANON_KEY (for frontend build)
+      # Optional Variables:
+      # - GOOGLE_CLIENT_ID
+      # - GOOGLE_CLIENT_SECRET
+      # - GOOGLE_REDIRECT_URI
+      # - EMAIL_FROM
+      # - OPENAI_API_KEY
+

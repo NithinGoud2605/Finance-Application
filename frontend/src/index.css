@@ -1,0 +1,185 @@
+@import "tailwindcss";
+
+/* Smooth scrolling for better UX */
+html { 
+  scroll-behavior: smooth; 
+}
+
+/* Base styles */
+@layer base {
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    background-color: white;
+    color: #1E2039;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Dark mode support */
+  .dark body {
+    background-color: #0f172a;
+    color: #f8fafc;
+  }
+  
+  /* Ensure proper focus states */
+  *:focus {
+    outline: 2px solid #7B61FF;
+    outline-offset: 2px;
+  }
+  
+  /* Remove default margins from headings */
+  h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+  }
+  
+  /* Ensure proper button styling */
+  button {
+    cursor: pointer;
+  }
+  
+  button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+@layer components {
+  /* Custom Finorn brand colors */
+  .text-finPurple {
+    color: #7B61FF;
+  }
+  
+  .text-finPink {
+    color: #FF6BB5;
+  }
+  
+  .text-finNavy {
+    color: #1E2039;
+  }
+  
+  .bg-finPurple {
+    background-color: #7B61FF;
+  }
+  
+  .bg-finPink {
+    background-color: #FF6BB5;
+  }
+  
+  .bg-finNavy {
+    background-color: #1E2039;
+  }
+  
+  /* Dark mode overrides for brand colors */
+  .dark .text-finNavy {
+    color: #f8fafc;
+  }
+  
+  .dark .bg-white {
+    background-color: #1e293b;
+  }
+  
+  .dark .bg-gray-50 {
+    background-color: #334155;
+  }
+  
+  .dark .bg-gray-100 {
+    background-color: #475569;
+  }
+  
+  .dark .border-gray-200 {
+    border-color: #475569;
+  }
+  
+  .dark .text-gray-600 {
+    color: #cbd5e1;
+  }
+  
+  .dark .text-gray-700 {
+    color: #e2e8f0;
+  }
+  
+  .dark .text-gray-900 {
+    color: #f8fafc;
+  }
+}
+
+@layer utilities {
+  /* Hide scrollbars while maintaining functionality */
+  .scrollbar-none {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Grid pattern for backgrounds */
+  .bg-grid-slate-50 {
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23f8fafc' fill-opacity='0.4'%3E%3Ccircle cx='7' cy='7' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  
+  .bg-grid-slate-100 {
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23e2e8f0' fill-opacity='0.4'%3E%3Ccircle cx='7' cy='7' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+}
+
+/* PDF Viewer styles */
+.rpv-core__viewer,
+.rpv-core__inner {
+  overflow: hidden !important;
+  scrollbar-width: none !important;
+}
+
+.rpv-core__viewer::-webkit-scrollbar,
+.rpv-core__inner::-webkit-scrollbar {
+  display: none !important;
+}
+
+/* Invoice PDF specific styles */
+.invoice-pdf-light * {
+  color: #000000 !important;
+}
+
+/* Carousel/Slider styles */
+.slick-prev, 
+.slick-next {
+  color: #374151;
+  transition: color 0.2s ease;
+}
+
+.dark .slick-prev, 
+.dark .slick-next {
+  color: #d1d5db;
+}
+
+.slick-prev:hover, 
+.slick-next:hover {
+  color: #111827;
+}
+
+.dark .slick-prev:hover, 
+.dark .slick-next:hover {
+  color: white;
+}
+
+.slick-dots li button:before {
+  color: #6b7280;
+  transition: color 0.2s ease;
+}
+
+.dark .slick-dots li button:before {
+  color: #9ca3af;
+}
+
+.slick-dots li.slick-active button:before {
+  color: #7B61FF;
+}
+
+.dark .slick-dots li.slick-active button:before {
+  color: #7B61FF;
+}
+

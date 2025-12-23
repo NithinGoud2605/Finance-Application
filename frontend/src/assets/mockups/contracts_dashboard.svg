@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" fill="none">
+  <rect width="800" height="450" rx="24" fill="white"/>
+  <circle cx="200" cy="220" r="100" fill="#2DD4BF" fill-opacity=".2"/>
+  <path d="M200 220 L200 120 A100 100 0 0 1 291 161 Z" fill="#FF6BB5"/>
+  <rect x="350" y="80" width="400" height="60" rx="12" fill="#7B61FF" fill-opacity=".1"/>
+  <rect x="350" y="160" width="400" height="60" rx="12" fill="#2DD4BF" fill-opacity=".1"/>
+  <rect x="350" y="240" width="400" height="60" rx="12" fill="#FF6BB5" fill-opacity=".1"/>
+  <text x="370" y="120" font-size="20" font-family="Arial" fill="#7B61FF">Active Contracts 85</text>
+  <text x="370" y="200" font-size="20" font-family="Arial" fill="#2DD4BF">Expiring Contracts 12</text>
+  <text x="370" y="280" font-size="20" font-family="Arial" fill="#FF6BB5">Signed Contracts 245</text>
+</svg> 

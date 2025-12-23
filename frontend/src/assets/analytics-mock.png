@@ -1,0 +1,12 @@
+# This is a placeholder for the analytics dashboard mockup image
+# Replace with actual analytics dashboard screenshot 
+
+<svg width="600" height="400" viewBox="0 0 600 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="600" height="400" fill="#F8FAFC"/>
+  <rect x="50" y="50" width="500" height="300" rx="20" fill="#F1F5F9"/>
+  <rect x="80" y="80" width="200" height="120" rx="8" fill="#2DD4BF" fill-opacity="0.2"/>
+  <rect x="320" y="80" width="200" height="120" rx="8" fill="#FF6BB5" fill-opacity="0.2"/>
+  <path d="M100 280 L140 260 L180 240 L220 220 L260 200" stroke="#7B61FF" stroke-width="3" fill="none"/>
+  <path d="M340 280 L380 270 L420 250 L460 240 L500 220" stroke="#FF6BB5" stroke-width="3" fill="none"/>
+  <text x="300" y="350" text-anchor="middle" font-family="Inter, sans-serif" font-size="18" fill="#64748B">Analytics Dashboard</text>
+</svg> 
