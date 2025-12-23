@@ -68,6 +68,49 @@ const InteractiveDashboard = () => {
     contracts: 12,
     revenue: 45280
   });
+  const [displayedMetrics, setDisplayedMetrics] = useState({
+    clients: 0,
+    invoices: 0,
+    expenses: 0,
+    contracts: 0,
+    revenue: 0
+  });
+
+  // Animate numbers counting up
+  useEffect(() => {
+    const duration = 2000;
+    const steps = 60;
+    const stepDuration = duration / steps;
+    
+    const animateValue = (start, end, setter) => {
+      const range = end - start;
+      const increment = range / steps;
+      let current = start;
+      let step = 0;
+      
+      const timer = setInterval(() => {
+        step++;
+        current = start + (increment * step);
+        if (step >= steps) {
+          current = end;
+          clearInterval(timer);
+        }
+        setter(Math.floor(current));
+      }, stepDuration);
+      
+      return timer;
+    };
+
+    const timers = [
+      animateValue(0, businessMetrics.clients, (val) => setDisplayedMetrics(prev => ({ ...prev, clients: val }))),
+      animateValue(0, businessMetrics.invoices, (val) => setDisplayedMetrics(prev => ({ ...prev, invoices: val }))),
+      animateValue(0, businessMetrics.expenses, (val) => setDisplayedMetrics(prev => ({ ...prev, expenses: val }))),
+      animateValue(0, businessMetrics.contracts, (val) => setDisplayedMetrics(prev => ({ ...prev, contracts: val }))),
+      animateValue(0, businessMetrics.revenue, (val) => setDisplayedMetrics(prev => ({ ...prev, revenue: val })))
+    ];
+
+    return () => timers.forEach(timer => clearInterval(timer));
+  }, [businessMetrics]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -82,14 +125,52 @@ const InteractiveDashboard = () => {
     return () => clearInterval(interval);
   }, []);
 
+  // Chart data with animation
+  const chartData = [35, 55, 40, 70, 45, 85, 65];
+  const chartLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
   return (
-    <div className="bg-white rounded-2xl shadow-xl p-6 border border-slate-200">
+    <motion.div 
+      className="bg-white rounded-2xl shadow-xl p-6 border border-slate-200 relative overflow-hidden"
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      {/* Floating background elements */}
+      <motion.div
+        className="absolute -top-10 -right-10 w-32 h-32 bg-blue-100 rounded-full opacity-20 blur-2xl"
+        animate={{ 
+          x: [0, 20, 0],
+          y: [0, 15, 0],
+          scale: [1, 1.1, 1]
+        }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.div
+        className="absolute -bottom-10 -left-10 w-32 h-32 bg-emerald-100 rounded-full opacity-20 blur-2xl"
+        animate={{ 
+          x: [0, -15, 0],
+          y: [0, -20, 0],
+          scale: [1, 1.2, 1]
+        }}
+        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+      />
+
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <motion.div 
+        className="flex items-center justify-between mb-6 relative z-10"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+      >
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-slate-900 rounded-lg">
+          <motion.div 
+            className="p-2 bg-slate-900 rounded-lg"
+            animate={{ rotate: [0, 5, -5, 0] }}
+            transition={{ duration: 4, repeat: Infinity }}
+          >
             <BarChart2 className="w-5 h-5 text-white" />
-          </div>
+          </motion.div>
           <div>
             <h3 className="font-semibold text-slate-900">Business Overview</h3>
             <p className="text-sm text-slate-500">Real-time dashboard</p>
@@ -97,109 +178,294 @@ const InteractiveDashboard = () => {
         </div>
         <motion.div 
           className="flex items-center gap-2 text-xs bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full font-medium border border-emerald-200"
-          animate={{ opacity: [1, 0.7, 1] }}
+          animate={{ 
+            opacity: [1, 0.7, 1],
+            scale: [1, 1.05, 1]
+          }}
           transition={{ duration: 2, repeat: Infinity }}
         >
-          <div className="w-2 h-2 bg-emerald-500 rounded-full" />
+          <motion.div 
+            className="w-2 h-2 bg-emerald-500 rounded-full"
+            animate={{ scale: [1, 1.3, 1], opacity: [1, 0.5, 1] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+          />
           Live
         </motion.div>
-      </div>
+      </motion.div>
 
       {/* Metrics Grid */}
-      <div className="grid grid-cols-2 gap-3 mb-6">
-        <motion.div
-          className="bg-blue-50 rounded-xl p-4 border border-blue-100"
-          whileHover={{ scale: 1.02 }}
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-xs text-blue-600 font-medium mb-1">Active Clients</p>
-              <p className="text-xl font-bold text-blue-700">{businessMetrics.clients}</p>
-              <p className="text-xs text-emerald-600">+{Math.floor(businessMetrics.clients * 0.1)} this month</p>
-            </div>
-            <Users className="w-6 h-6 text-blue-400" />
-          </div>
-        </motion.div>
-
-        <motion.div
-          className="bg-emerald-50 rounded-xl p-4 border border-emerald-100"
-          whileHover={{ scale: 1.02 }}
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-xs text-emerald-600 font-medium mb-1">Invoices</p>
-              <p className="text-xl font-bold text-emerald-700">{businessMetrics.invoices}</p>
-              <p className="text-xs text-emerald-600">${(businessMetrics.revenue / 1000).toFixed(1)}K revenue</p>
-            </div>
-            <FileText className="w-6 h-6 text-emerald-400" />
-          </div>
-        </motion.div>
-
-        <motion.div
-          className="bg-amber-50 rounded-xl p-4 border border-amber-100"
-          whileHover={{ scale: 1.02 }}
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-xs text-amber-600 font-medium mb-1">Expenses</p>
-              <p className="text-xl font-bold text-amber-700">${(businessMetrics.expenses / 1000).toFixed(1)}K</p>
-              <p className="text-xs text-amber-600">3 pending approval</p>
-            </div>
-            <BarChart2 className="w-6 h-6 text-amber-400" />
-          </div>
-        </motion.div>
-
-        <motion.div
-          className="bg-violet-50 rounded-xl p-4 border border-violet-100"
-          whileHover={{ scale: 1.02 }}
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-xs text-violet-600 font-medium mb-1">Contracts</p>
-              <p className="text-xl font-bold text-violet-700">{businessMetrics.contracts}</p>
-              <p className="text-xs text-emerald-600">{Math.floor(businessMetrics.contracts * 0.8)} signed</p>
-            </div>
-            <ClipboardList className="w-6 h-6 text-violet-400" />
-          </div>
-        </motion.div>
+      <div className="grid grid-cols-2 gap-3 mb-6 relative z-10">
+        {[
+          { 
+            label: 'Active Clients', 
+            value: displayedMetrics.clients, 
+            change: `+${Math.floor(displayedMetrics.clients * 0.1)} this month`,
+            color: 'blue',
+            icon: Users,
+            bg: 'bg-blue-50',
+            border: 'border-blue-100',
+            text: 'text-blue-600',
+            textBold: 'text-blue-700',
+            iconColor: 'text-blue-400'
+          },
+          { 
+            label: 'Invoices', 
+            value: displayedMetrics.invoices, 
+            change: `$${(displayedMetrics.revenue / 1000).toFixed(1)}K revenue`,
+            color: 'emerald',
+            icon: FileText,
+            bg: 'bg-emerald-50',
+            border: 'border-emerald-100',
+            text: 'text-emerald-600',
+            textBold: 'text-emerald-700',
+            iconColor: 'text-emerald-400'
+          },
+          { 
+            label: 'Expenses', 
+            value: `$${(displayedMetrics.expenses / 1000).toFixed(1)}K`, 
+            change: '3 pending approval',
+            color: 'amber',
+            icon: BarChart2,
+            bg: 'bg-amber-50',
+            border: 'border-amber-100',
+            text: 'text-amber-600',
+            textBold: 'text-amber-700',
+            iconColor: 'text-amber-400'
+          },
+          { 
+            label: 'Contracts', 
+            value: displayedMetrics.contracts, 
+            change: `${Math.floor(displayedMetrics.contracts * 0.8)} signed`,
+            color: 'violet',
+            icon: ClipboardList,
+            bg: 'bg-violet-50',
+            border: 'border-violet-100',
+            text: 'text-violet-600',
+            textBold: 'text-violet-700',
+            iconColor: 'text-violet-400'
+          }
+        ].map((metric, index) => {
+          const IconComponent = metric.icon;
+          return (
+            <motion.div
+              key={index}
+              className={`${metric.bg} rounded-xl p-4 border ${metric.border} relative overflow-hidden`}
+              initial={{ opacity: 0, y: 20, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ delay: 0.3 + index * 0.1, duration: 0.5 }}
+              whileHover={{ scale: 1.05, y: -2 }}
+            >
+              {/* Animated background gradient */}
+              <motion.div
+                className="absolute inset-0 opacity-0"
+                style={{
+                  background: `linear-gradient(to bottom right, ${
+                    metric.color === 'blue' ? 'rgba(219, 234, 254, 0.5)' :
+                    metric.color === 'emerald' ? 'rgba(209, 250, 229, 0.5)' :
+                    metric.color === 'amber' ? 'rgba(254, 243, 199, 0.5)' :
+                    'rgba(237, 233, 254, 0.5)'
+                  }, transparent)`
+                }}
+                whileHover={{ opacity: 1 }}
+                transition={{ duration: 0.3 }}
+              />
+              
+              <div className="flex items-center justify-between relative z-10">
+                <div>
+                  <p className={`text-xs ${metric.text} font-medium mb-1`}>{metric.label}</p>
+                  <motion.p 
+                    className={`text-xl font-bold ${metric.textBold}`}
+                    key={metric.value}
+                    initial={{ scale: 1.2 }}
+                    animate={{ scale: 1 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    {metric.value}
+                  </motion.p>
+                  <p className={`text-xs ${metric.text}`}>{metric.change}</p>
+                </div>
+                <motion.div
+                  animate={{ 
+                    rotate: [0, 10, -10, 0],
+                    scale: [1, 1.1, 1]
+                  }}
+                  transition={{ 
+                    duration: 3 + index * 0.5, 
+                    repeat: Infinity,
+                    delay: index * 0.3
+                  }}
+                >
+                  <IconComponent className={`w-6 h-6 ${metric.iconColor}`} />
+                </motion.div>
+              </div>
+            </motion.div>
+          );
+        })}
       </div>
 
+      {/* Revenue Chart */}
+      <motion.div 
+        className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-4 border border-slate-200 mb-6 relative z-10"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.7 }}
+      >
+        <div className="flex items-center justify-between mb-3">
+          <div className="text-sm font-semibold text-slate-700">Revenue Overview</div>
+          <motion.div 
+            className="text-xs text-slate-500 bg-white px-2 py-1 rounded"
+            animate={{ scale: [1, 1.05, 1] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          >
+            Last 7 days
+          </motion.div>
+        </div>
+        <div className="flex items-end justify-between h-24 space-x-2">
+          {chartData.map((height, index) => (
+            <motion.div
+              key={index}
+              className="flex-1 rounded-t-md relative"
+              style={{
+                background: index === 5 
+                  ? 'linear-gradient(to top, #10b981, #34d399)' 
+                  : 'linear-gradient(to top, #cbd5e1, #e2e8f0)'
+              }}
+              initial={{ height: 0 }}
+              animate={{ height: `${height}%` }}
+              transition={{ delay: 0.8 + index * 0.1, duration: 0.6, ease: "easeOut" }}
+              whileHover={{ scale: 1.1, transition: { duration: 0.2 } }}
+            >
+              <motion.div
+                className="absolute -top-6 left-1/2 transform -translate-x-1/2 text-xs font-medium text-slate-600 opacity-0"
+                whileHover={{ opacity: 1, y: -2 }}
+              >
+                ${(height * 100).toLocaleString()}
+              </motion.div>
+            </motion.div>
+          ))}
+        </div>
+        <div className="flex justify-between mt-2 text-xs text-slate-400">
+          {chartLabels.map((label, index) => (
+            <motion.span
+              key={index}
+              className={index === 5 ? 'text-emerald-600 font-medium' : ''}
+              animate={index === 5 ? { scale: [1, 1.1, 1] } : {}}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              {label}
+            </motion.span>
+          ))}
+        </div>
+      </motion.div>
+
       {/* Active Feature */}
-      <div className="bg-slate-50 rounded-xl p-4 border border-slate-200">
+      <motion.div 
+        className="bg-slate-50 rounded-xl p-4 border border-slate-200 relative z-10"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.9 }}
+      >
         <div className="flex items-center gap-2 mb-3">
-          <Zap className="w-4 h-4 text-amber-500" />
+          <motion.div
+            animate={{ rotate: [0, 360] }}
+            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+          >
+            <Zap className="w-4 h-4 text-amber-500" />
+          </motion.div>
           <span className="text-sm font-medium text-slate-700">Featured</span>
         </div>
         
         <AnimatePresence mode="wait">
           <motion.div
             key={activeFeature}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
+            initial={{ opacity: 0, x: 20, scale: 0.95 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            exit={{ opacity: 0, x: -20, scale: 0.95 }}
+            transition={{ duration: 0.4 }}
             className="flex items-center gap-3"
           >
-            <div className={`p-2 ${features[activeFeature].iconColor} rounded-lg`}>
+            <motion.div 
+              className={`p-2 ${features[activeFeature].iconColor} rounded-lg`}
+              animate={{ rotate: [0, 5, -5, 0] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
               {React.createElement(features[activeFeature].icon, { className: "w-4 h-4 text-white" })}
-            </div>
+            </motion.div>
             <div className="flex-1">
               <h4 className="font-semibold text-slate-900 text-sm">{features[activeFeature].title}</h4>
               <p className="text-xs text-slate-500">{features[activeFeature].description}</p>
             </div>
           </motion.div>
         </AnimatePresence>
-      </div>
+      </motion.div>
 
       {/* Progress dots */}
-      <div className="flex justify-center mt-4 gap-1">
+      <motion.div 
+        className="flex justify-center mt-4 gap-1 relative z-10"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1 }}
+      >
         {features.map((_, index) => (
-          <div
+          <motion.div
             key={index}
-            className={`h-1.5 rounded-full transition-all ${index === activeFeature ? 'bg-slate-900 w-6' : 'bg-slate-300 w-1.5'}`}
+            className={`h-1.5 rounded-full ${index === activeFeature ? 'bg-slate-900' : 'bg-slate-300'}`}
+            animate={{ 
+              width: index === activeFeature ? 24 : 6,
+              scale: index === activeFeature ? 1.1 : 1
+            }}
+            transition={{ duration: 0.3 }}
+            whileHover={{ scale: 1.2 }}
           />
         ))}
-      </div>
-    </div>
+      </motion.div>
+
+      {/* Floating action buttons */}
+      <motion.div 
+        className="grid grid-cols-2 gap-3 mt-4 relative z-10"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.1 }}
+      >
+        <motion.button
+          className="bg-emerald-500 rounded-xl p-3 text-white font-semibold text-sm flex items-center justify-center gap-2"
+          whileHover={{ scale: 1.05, y: -2 }}
+          whileTap={{ scale: 0.95 }}
+          animate={{ 
+            boxShadow: [
+              '0 4px 6px rgba(16, 185, 129, 0.3)',
+              '0 8px 12px rgba(16, 185, 129, 0.4)',
+              '0 4px 6px rgba(16, 185, 129, 0.3)'
+            ]
+          }}
+          transition={{ duration: 2, repeat: Infinity }}
+        >
+          <motion.span
+            animate={{ rotate: [0, 90, 0] }}
+            transition={{ duration: 0.5 }}
+          >
+            +
+          </motion.span>
+          New Invoice
+        </motion.button>
+        <motion.button
+          className="bg-blue-500 rounded-xl p-3 text-white font-semibold text-sm flex items-center justify-center gap-2"
+          whileHover={{ scale: 1.05, y: -2 }}
+          whileTap={{ scale: 0.95 }}
+          animate={{ 
+            boxShadow: [
+              '0 4px 6px rgba(59, 130, 246, 0.3)',
+              '0 8px 12px rgba(59, 130, 246, 0.4)',
+              '0 4px 6px rgba(59, 130, 246, 0.3)'
+            ]
+          }}
+          transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+        >
+          <Users className="w-4 h-4" />
+          Add Client
+        </motion.button>
+      </motion.div>
+    </motion.div>
   );
 };
 

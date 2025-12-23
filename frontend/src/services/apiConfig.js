@@ -85,9 +85,11 @@ export const getEnvironmentInfo = () => {
   return info;
 };
 
-// Log environment info in development
-if (!isProduction() && typeof console !== 'undefined') {
-  console.log('API Config Environment:', getEnvironmentInfo());
+// Log environment info (always log in production to help debug)
+if (typeof console !== 'undefined') {
+  const envInfo = getEnvironmentInfo();
+  console.log('🔍 API Config Environment:', envInfo);
+  console.log('🔍 Current API Base URL:', getApiBaseUrl());
 }
 
 /**
