@@ -1,8 +1,9 @@
 // IMPORTANT: Set DNS preference FIRST, before any other requires
 // This must be at the very top to ensure it's applied before any DNS lookups
 const dns = require('dns');
+
+// Force Node.js to prefer IPv4 addresses (fixes IPv6 connection issues on Render)
 if (typeof dns.setDefaultResultOrder === 'function') {
-  // Node.js 17.0.0+ - Force IPv4 first to avoid IPv6 connection issues on Render
   dns.setDefaultResultOrder('ipv4first');
   console.log('✅ DNS set to prefer IPv4 (ipv4first)');
 }
@@ -54,6 +55,13 @@ function createSequelizeInstance() {
   const dbConfig = getDatabaseConfig();
   const isSupabase = dbConfig.host && dbConfig.host.includes('supabase.co');
   const isProduction = process.env.NODE_ENV === 'production';
+  
+  // Check if using connection pooler (recommended for Render/serverless)
+  const isPooler = dbConfig.host && (dbConfig.host.includes('pooler.supabase.com') || dbConfig.port === 6543);
+  
+  if (isPooler) {
+    console.log('✅ Using Supabase Connection Pooler (recommended for serverless)');
+  }
 
   console.log('DB Config:', {
     name: dbConfig.database,
@@ -78,7 +86,7 @@ function createSequelizeInstance() {
       logging: process.env.NODE_ENV === 'development' ? console.log : false,
       dialectOptions: {
         // Enable SSL for Supabase or production
-        ssl: (isSupabase || isProduction) ? {
+        ssl: (isSupabase || isProduction || isPooler) ? {
           require: true,
           rejectUnauthorized: false,
           mode: 'require'
@@ -90,6 +98,7 @@ function createSequelizeInstance() {
         keepAliveInitialDelayMillis: 0,
         // Force IPv4 connection (pg library option)
         // Combined with dns.setDefaultResultOrder('ipv4first') above for maximum compatibility
+        // Connection pooler uses IPv4 by default, but this ensures it for direct connections too
         family: 4
       },
       pool: {
